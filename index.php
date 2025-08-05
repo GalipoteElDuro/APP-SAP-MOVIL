@@ -22,7 +22,7 @@
                 <img src="/img/logo-inicio.jpg" alt="logo-inicio" class="rounded-circle img-fluid" style="width: 100px; height: 100px; object-fit: cover;">
             </div>
 
-            <h3 class="text-center mb-4">IniciarXXXSesión</h3>
+            <h3 class="text-center mb-4">Iniciar Sesión</h3>
 
             <?php if (isset($_SESSION['login_error'])) : ?>
                 <div class="alert alert-danger" role="alert">
