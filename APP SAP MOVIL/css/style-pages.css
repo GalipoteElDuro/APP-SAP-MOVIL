@@ -1,0 +1,293 @@
+/* ===== VARIABLES DE COLORES CORPORATIVOS ===== */
+:root {
+  --primary-green: #089c42;
+  --primary-orange: #f18536;
+  --light-gray: #f8f9fa;
+  --dark-green: #067332;
+  --dark-orange: #d67028;
+  --white: #ffffff;
+  --text-dark: #2d3748;
+  --shadow-light: rgba(8, 156, 66, 0.1);
+  --shadow-dark: rgba(0, 0, 0, 0.15);
+}
+
+/* ===== ESTILOS GENERALES ===== */
+body {
+  background-color: var(--light-gray);
+  padding-top: 70px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== NAVBAR PERSONALIZADA ===== */
+.navbar-corporate {
+  background: linear-gradient(
+    135deg,
+    var(--primary-green) 0%,
+    var(--dark-green) 100%
+  );
+  box-shadow: 0 4px 12px var(--shadow-dark);
+}
+
+.navbar-corporate .navbar-brand {
+  color: var(--white) !important;
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+}
+
+.navbar-corporate .navbar-toggler {
+  border: 2px solid var(--white);
+  padding: 0.4rem 0.6rem;
+}
+
+.navbar-corporate .navbar-toggler:focus {
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
+}
+
+.navbar-corporate .navbar-toggler-icon {
+  filter: brightness(0) invert(1);
+}
+
+/* ===== OFFCANVAS PERSONALIZADO ===== */
+.offcanvas-corporate {
+  background: linear-gradient(
+    180deg,
+    var(--primary-green) 0%,
+    var(--dark-green) 100%
+  );
+}
+
+.offcanvas-corporate .offcanvas-title {
+  color: var(--white);
+  font-weight: 800;
+}
+
+.offcanvas-corporate .btn-close {
+  filter: brightness(0) invert(1);
+}
+
+.offcanvas-corporate .nav-link {
+  color: var(--white) !important;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.offcanvas-corporate .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateX(5px);
+  color: var(--white) !important;
+}
+
+.offcanvas-corporate .nav-link.active {
+  background: linear-gradient(
+    135deg,
+    var(--primary-orange) 0%,
+    var(--dark-orange) 100%
+  );
+  box-shadow: 0 4px 8px rgba(241, 133, 54, 0.3);
+}
+
+.offcanvas-corporate .btn-danger {
+  background: linear-gradient(
+    135deg, 
+    var(--primary-green),
+    var(--primary-orange));
+  color: var(--white);
+  border: none;
+  width: 75%;
+  padding: 0.75rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.offcanvas-corporate .btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+}
+
+/* ===== MENSAJE DE BIENVENIDA ===== */
+.welcome-message {
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+.welcome-message strong {
+  background: linear-gradient(
+    135deg,
+    var(--primary-green),
+    var(--primary-orange)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== TARJETAS PERSONALIZADAS ===== */
+.card-custom {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: var(--white);
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px var(--shadow-light);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-decoration: none;
+  color: var(--text-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-custom::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-green) 0%,
+    var(--primary-orange) 100%
+  );
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.card-custom:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 35px var(--shadow-dark);
+  color: var(--text-dark);
+  text-decoration: none;
+}
+
+.card-custom:hover::before {
+  transform: scaleX(1);
+}
+
+.card-custom .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem 0.5rem;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+  margin-top: 0;
+  padding: 0;
+  color: var(--primary-green);
+  transition: all 0.3s ease;
+}
+
+.card-custom:hover .card-icon {
+  color: var(--primary-orange);
+  transform: scale(1.1) rotate(5deg);
+}
+
+.card-text-label {
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  color: var(--text-dark);
+}
+
+/* ===== EFECTOS ESPECIALES PARA CADA TARJETA ===== */
+.card-custom:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.card-custom:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.card-custom:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.card-custom:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.card-custom:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+/* ===== ANIMACIÓN DE ENTRADA ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-custom {
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+/* ===== ESTILOS PARA OFFCANVAS BODY ===== */
+.offcanvas-body {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+}
+
+.offcanvas-body .navbar-nav .nav-item.mt-auto {
+  margin-top: auto;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .welcome-message {
+    font-size: 1.4rem;
+  }
+
+  .card-custom {
+    min-height: 110px;
+  }
+
+  .card-icon {
+    font-size: 2rem;
+  }
+
+  .card-text-label {
+    font-size: 0.9rem;
+  }
+}
+
+/* ===== MEJORAS ADICIONALES ===== */
+.container {
+  max-width: 1200px;
+}
+
+.row {
+  margin: 0 -0.75rem;
+}
+
+.row > [class*="col-"] {
+  padding: 0 0.75rem;
+  margin-bottom: 1.5rem;
+}
