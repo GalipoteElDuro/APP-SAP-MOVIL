@@ -1,0 +1,35 @@
+/* ===== VARIABLES DE COLORES CORPORATIVOS ===== */
+:root {
+  --primary-green: #089c42;
+  --primary-orange: #f18536;
+  --light-gray: #f8f9fa;
+  --dark-green: #067332;
+  --dark-orange: #d67028;
+  --white: #ffffff;
+  --text-dark: #2d3748;
+  --shadow-light: rgba(8, 156, 66, 0.1);
+  --shadow-dark: rgba(0, 0, 0, 0.15);
+}
+
+/* ===== ESTILOS GENERALES ===== */
+body {
+  background-color: var(--light-gray);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-iniciar-sesion{
+  background: linear-gradient(
+    135deg,
+    var(--primary-green) 0%,
+    var(--dark-green) 100%
+  )!important;
+  border: none !important;
+  box-shadow: 0 4px 12px var(--shadow-dark)!important;
+  color: #ffffff !important;
+  transition: transform 0.3s ease; /* Transición suave para la transformación */
+}
+
+.btn-iniciar-sesion:hover{
+  transform: scale(0.98); /* Agranda el botón un 10% */
+}
+
