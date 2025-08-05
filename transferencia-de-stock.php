@@ -186,6 +186,9 @@ $sessionId = htmlspecialchars($_SESSION['sap_session_id']);
                                         <i class="bi bi-upc-scan"></i>
                                     </button>
                                 </div>
+                                <div id="scanner-container" style="width: 100%; display: none;">
+                                    <div class="viewport" id="interactive"></div>
+                                </div>
                             </div>
 
                             <!-- Descripción -->
@@ -325,6 +328,8 @@ $sessionId = htmlspecialchars($_SESSION['sap_session_id']);
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="js/lector-codigo-de-barras.js"></script>
     <script src="js/transferencia-de-stock.js"></script>
 </body>
 
