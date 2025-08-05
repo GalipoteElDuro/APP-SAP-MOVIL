@@ -35,7 +35,7 @@
 
             <form action="Conexiones/login.php" method="POST">
                 <div class="mb-3">
-                    <label for="usuario" class="form-label fw-semibold">Usuario</label>
+                    <label for="usuario" class="form-label fw-semibold">Usuario1234</label>
                     <input type="text" class="form-control" id="usuario" name="usuario" required>
                 </div>
 
