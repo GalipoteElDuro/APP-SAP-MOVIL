@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="password" class="form-label fw-semibold">Contraseña</label>
+                    <label for="password" class="form-label fw-semibold">Contraseñaxxx</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
 
