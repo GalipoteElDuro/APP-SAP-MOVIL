@@ -70,7 +70,7 @@ $sessionId = htmlspecialchars($_SESSION['sap_session_id']); // ID de sesión SAP
                         <!-- Opción TRASLADO DE STOCK (enlaza a otra página) -->
                         <li class="nav-item">
                             <a class="nav-link fw-bold fs-5" href="transferencia-de-stock.php">
-                                <i class="bi bi-truck me-2 fs-5"></i>TRASLADO DE STOCK
+                                <i class="bi bi-truck me-2 fs-5"></i>TRANSFERENCIA DE STOCK
                             </a>
                         </li>
                         <!-- Opción INFORME DE RECEPCIÓN (sin enlace aún) -->
