@@ -27,96 +27,45 @@ document.addEventListener("DOMContentLoaded", function () {
           type: "LiveStream",
           target: document.querySelector("#interactive"),
           constraints: {
-            width: 480,
-            height: 320,
-            facingMode: "environment", // 'environment' para la cámara trasera
-          },
+            facingMode: "environment", // Cámara trasera
+            aspectRatio: { min: 1, max: 2 },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
         },
         decoder: {
           readers: [
-            "code_128_reader",
             "ean_reader",
             "ean_8_reader",
+            "code_128_reader",
             "code_39_reader",
-            "codabar_reader",
             "upc_reader",
             "upc_e_reader",
+            "codabar_reader"
           ],
+          locate: true
         },
+        numOfWorkers: navigator.hardwareConcurrency || 4,
+        locate: true
       },
       function (err) {
         if (err) {
           console.error("Error al inicializar Quagga:", err);
-          // Informar al usuario que no se pudo acceder a la cámara
-          alert("Error: No se pudo iniciar la cámara. Verifique los permisos.");
+          alert("Error: No se pudo iniciar la cámara. Verifique permisos.");
           return;
         }
-        console.log("Inicialización de Quagga finalizada. Listo para escanear.");
+        console.log("Quagga listo para escanear.");
         Quagga.start();
       }
     );
 
-    Quagga.onProcessed(function (result) {
-      const drawingCtx = Quagga.canvas.ctx.overlay;
-      const drawingCanvas = Quagga.canvas.dom.overlay;
-
-      if (result) {
-        // Dibuja el cuadro delimitador
-        if (result.boxes) {
-          drawingCtx.clearRect(
-            0,
-            0,
-            parseInt(drawingCanvas.getAttribute("width")),
-            parseInt(drawingCanvas.getAttribute("height"))
-          );
-          result.boxes
-            .filter(box => box !== result.box)
-            .forEach(box => {
-              Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
-                color: "green",
-                lineWidth: 2,
-              });
-            });
-        }
-
-        if (result.box) {
-          Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
-            color: "#00F",
-            lineWidth: 2,
-          });
-        }
-
-        if (result.codeResult && result.codeResult.code) {
-          Quagga.ImageDebug.drawPath(
-            result.line,
-            { x: "x", y: "y" },
-            drawingCtx,
-            { color: "red", lineWidth: 3 }
-          );
-        }
-      }
-    });
-
     Quagga.onDetected(function (result) {
-      console.log(
-        "Código de barras detectado y procesado: [" +
-          result.codeResult.code +
-          "]",
-        result
-      );
-
-      // Asigna el código de barras al campo de entrada
-      if (result.codeResult.code && codigoBarrasInput) {
+      if (result.codeResult && result.codeResult.code) {
         codigoBarrasInput.value = result.codeResult.code;
-        
-        // Opcional: disparar un evento de cambio si otra lógica depende de ello
-        const event = new Event('input', { bubbles: true });
-        codigoBarrasInput.dispatchEvent(event);
+        codigoBarrasInput.dispatchEvent(new Event('input', { bubbles: true }));
+        Quagga.stop();
+        scannerContainer.style.display = "none";
       }
-
-      // Detiene el escáner y oculta el contenedor
-      Quagga.stop();
-      scannerContainer.style.display = "none";
     });
   }
 });

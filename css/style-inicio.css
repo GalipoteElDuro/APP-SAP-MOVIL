@@ -291,3 +291,19 @@ body {
   padding: 0 0.75rem;
   margin-bottom: 1.5rem;
 }
+
+@media (max-width: 768px) {
+  .navbar-corporate .navbar-toggler {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-corporate .navbar-brand {
+    font-size: 1rem; /* Reduce el logo para que quepa */
+  }
+  .navbar-corporate .navbar-toggler {
+    margin-left: auto;
+  }
+}
+
