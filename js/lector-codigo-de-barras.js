@@ -1,17 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Selecciona el botón de escanear por su clase
-  const scanButton = document.querySelector(".bi-upc-scan");
+  // Selecciona el botón de escanear por su clase más específica
+  const scanButton = document.querySelector(".btn-scan");
   const scannerContainer = document.getElementById("scanner-container");
+  const codigoBarrasInput = document.getElementById("codigoBarras");
 
   if (scanButton) {
     scanButton.addEventListener("click", function () {
-      // Muestra el contenedor del escaner
+      // Alterna la visibilidad del contenedor del escáner
       if (scannerContainer.style.display === "none") {
         scannerContainer.style.display = "block";
         startScanner();
       } else {
         scannerContainer.style.display = "none";
-        Quagga.stop();
+        if (Quagga) {
+          Quagga.stop();
+        }
       }
     });
   }
@@ -26,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
           constraints: {
             width: 480,
             height: 320,
-            facingMode: "environment", // "environment" para la cámara trasera, "user" para la frontal,
+            facingMode: "environment", // 'environment' para la cámara trasera
           },
         },
         decoder: {
@@ -35,44 +38,30 @@ document.addEventListener("DOMContentLoaded", function () {
             "ean_reader",
             "ean_8_reader",
             "code_39_reader",
-            "code_39_vin_reader",
             "codabar_reader",
             "upc_reader",
             "upc_e_reader",
-            "i2of5_reader",
           ],
-          debug: {
-            showCanvas: true,
-            showPatches: true,
-            showFoundPatches: true,
-            showSkeleton: true,
-            showLabels: true,
-            showPatchLabels: true,
-            showRemainingPatchLabels: true,
-            boxFromPatches: {
-              showTransformed: true,
-              showTransformedBox: true,
-              showBB: true,
-            },
-          },
         },
       },
       function (err) {
         if (err) {
-          console.log(err);
+          console.error("Error al inicializar Quagga:", err);
+          // Informar al usuario que no se pudo acceder a la cámara
+          alert("Error: No se pudo iniciar la cámara. Verifique los permisos.");
           return;
         }
-
-        console.log("Initialization finished. Ready to start");
+        console.log("Inicialización de Quagga finalizada. Listo para escanear.");
         Quagga.start();
       }
     );
 
     Quagga.onProcessed(function (result) {
-      var drawingCtx = Quagga.canvas.ctx.overlay,
-        drawingCanvas = Quagga.canvas.dom.overlay;
+      const drawingCtx = Quagga.canvas.ctx.overlay;
+      const drawingCanvas = Quagga.canvas.dom.overlay;
 
       if (result) {
+        // Dibuja el cuadro delimitador
         if (result.boxes) {
           drawingCtx.clearRect(
             0,
@@ -81,52 +70,28 @@ document.addEventListener("DOMContentLoaded", function () {
             parseInt(drawingCanvas.getAttribute("height"))
           );
           result.boxes
-            .filter(function (box) {
-              return box !== result.box;
-            })
-            .forEach(function (box) {
-              Quagga.ImageDebug.drawPath(
-                box,
-                {
-                  x: 0,
-                  y: 1,
-                },
-                drawingCtx,
-                {
-                  color: "green",
-                  lineWidth: 2,
-                }
-              );
+            .filter(box => box !== result.box)
+            .forEach(box => {
+              Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
+                color: "green",
+                lineWidth: 2,
+              });
             });
         }
 
         if (result.box) {
-          Quagga.ImageDebug.drawPath(
-            result.box,
-            {
-              x: 0,
-              y: 1,
-            },
-            drawingCtx,
-            {
-              color: "#00F",
-              lineWidth: 2,
-            }
-          );
+          Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
+            color: "#00F",
+            lineWidth: 2,
+          });
         }
 
         if (result.codeResult && result.codeResult.code) {
           Quagga.ImageDebug.drawPath(
             result.line,
-            {
-              x: "x",
-              y: "y",
-            },
+            { x: "x", y: "y" },
             drawingCtx,
-            {
-              color: "red",
-              lineWidth: 3,
-            }
+            { color: "red", lineWidth: 3 }
           );
         }
       }
@@ -134,22 +99,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     Quagga.onDetected(function (result) {
       console.log(
-        "Barcode detected and processed : [" + result.codeResult.code + "]",
+        "Código de barras detectado y procesado: [" +
+          result.codeResult.code +
+          "]",
         result
       );
 
-      // --- ¡ACCIÓN IMPORTANTE! ---
-      // Aquí es donde obtienes el código.
-      // Asigna el código a un campo de tu formulario.
-      // Por ejemplo, si tienes un input con id="codigo_producto":
-      // document.getElementById('codigo_producto').value = result.codeResult.code;
+      // Asigna el código de barras al campo de entrada
+      if (result.codeResult.code && codigoBarrasInput) {
+        codigoBarrasInput.value = result.codeResult.code;
+        
+        // Opcional: disparar un evento de cambio si otra lógica depende de ello
+        const event = new Event('input', { bubbles: true });
+        codigoBarrasInput.dispatchEvent(event);
+      }
 
-      // Detiene el escaner y oculta el contenedor
+      // Detiene el escáner y oculta el contenedor
       Quagga.stop();
       scannerContainer.style.display = "none";
-
-      // Opcional: Muestra una alerta con el código
-      alert("Código de barras detectado: " + result.codeResult.code);
     });
   }
 });
