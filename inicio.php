@@ -25,7 +25,7 @@ $sessionId = htmlspecialchars($_SESSION['sap_session_id']); // ID de sesión SAP
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons para iconografía -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="css/style-pages.css">
+    <link rel="stylesheet" href="css/style-inicio.css">
 </head>
 
 <body>
