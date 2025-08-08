@@ -219,12 +219,6 @@ $sessionId = htmlspecialchars($_SESSION['sap_session_id']);
                                 </label>
                                 <select class="form-select form-control-custom" id="deUbicacion" required>
                                     <option value="">Seleccionar ubicación origen</option>
-                                    <option value="A01">Almacén A - Estante 01</option>
-                                    <option value="A02">Almacén A - Estante 02</option>
-                                    <option value="A03">Almacén A - Estante 03</option>
-                                    <option value="B01">Almacén B - Estante 01</option>
-                                    <option value="B02">Almacén B - Estante 02</option>
-                                    <option value="C01">Almacén C - Estante 01</option>
                                 </select>
                             </div>
 
@@ -235,12 +229,6 @@ $sessionId = htmlspecialchars($_SESSION['sap_session_id']);
                                 </label>
                                 <select class="form-select form-control-custom" id="aUbicacion" required>
                                     <option value="">Seleccionar ubicación destino</option>
-                                    <option value="A01">Almacén A - Estante 01</option>
-                                    <option value="A02">Almacén A - Estante 02</option>
-                                    <option value="A03">Almacén A - Estante 03</option>
-                                    <option value="B01">Almacén B - Estante 01</option>
-                                    <option value="B02">Almacén B - Estante 02</option>
-                                    <option value="C01">Almacén C - Estante 01</option>
                                 </select>
                             </div>
 

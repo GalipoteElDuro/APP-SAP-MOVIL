@@ -192,25 +192,47 @@ function updateUbicaciones(sucursal) {
     case "01": // Sucursal 01 - Principal
       ubicaciones = [
         { value: "45", text: "01-ALMACÉN NIVEL 2" },
-        { value: "C-A02", text: "Centro - Almacén A - Estante 02" },
-        { value: "C-A03", text: "Centro - Almacén A - Estante 03" },
-        { value: "C-B01", text: "Centro - Almacén B - Estante 01" },
-        { value: "C-B02", text: "Centro - Almacén B - Estante 02" },
+        { value: "44", text: "01-ALMACÉN NIVEL 3" },
+        { value: "6", text: "01-AVERIAS" },
+        { value: "4", text: "01-CAMION" },
+        { value: "27", text: "01-COSMETICOS" },
+        { value: "25", text: "01-CUARTO FRIO" },
+        { value: "26", text: "01-HOGAR" },
+        { value: "29", text: "01-MAGALY" },
+        { value: "22", text: "01-NO PERECEDEROS" },
+        { value: "8", text: "01-PRODUCCION" },
+        { value: "9", text: "01-PUNTO DE VENTA" },
+        { value: "10", text: "01-RECEPCION" },
+        { value: "28", text: "01-SOTANO" },
+        { value: "31", text: "01-SUMINISTROS" },
       ];
       break;
     case "02": // Sucursal Almacén Al Por Mayor
       ubicaciones = [
-        { value: "N-A01", text: "Norte - Almacén A - Estante 01" },
-        { value: "N-A02", text: "Norte - Almacén A - Estante 02" },
-        { value: "N-B01", text: "Norte - Almacén B - Estante 01" },
-        { value: "N-C01", text: "Norte - Almacén C - Estante 01" },
+        { value: "32", text: "02-ALMACEN AL POR MAYOR NIVEL 1" },
+        { value: "35", text: "02-ALMACEN AL POR MAYOR NIVEL 2" },
+        { value: "36", text: "02-ALMACÉN AL POR MAYOR NIVEL 3" },
+        { value: "12", text: "02-AVERIAS" },
+        { value: "13", text: "02-CAMION" },
+        { value: "14", text: "02-PRODUCCION" },
+        { value: "43", text: "02-PUNTO DE VENTA" },
+        { value: "15", text: "02-RECEPCION" },
+        { value: "33", text: "02-SUMINISTROS AL POR MAYOR" },
       ];
       break;
     case "03": // Surcursal Villa Hermosa
       ubicaciones = [
-        { value: "S-A01", text: "Sur - Almacén A - Estante 01" },
-        { value: "S-A02", text: "Sur - Almacén A - Estante 02" },
-        { value: "S-B01", text: "Sur - Almacén B - Estante 01" },
+        { value: "16", text: "03-ALMACEN" },
+        { value: "17", text: "03-AVERIAS" },
+        { value: "46", text: "03-CAMION" },
+        { value: "41", text: "03-COSMETICOS" },
+        { value: "39", text: "03-CUARTO FRIO CARNES Y MARISCOS" },
+        { value: "38", text: "03-CUARTO FRIO VEGETALES" },
+        { value: "24", text: "03-NO PERECEDEROS" },
+        { value: "18", text: "03-PRODUCCION" },
+        { value: "19", text: "03-PUNTO DE VENTA" },
+        { value: "21", text: "03-RECEPCION" },
+        { value: "40", text: "03-SUMINISTROS" },
       ];
       break;
   }
