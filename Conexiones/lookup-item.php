@@ -21,12 +21,21 @@ if (!isset($_SESSION['sap_session_id'])) {
     exit;
 }
 
-$barcode = $_GET['barcode'] ?? null;
-$warehouse = $_GET['warehouse'] ?? null;
+// Limpieza de parámetros
+$barcode = trim($_GET['barcode'] ?? '');
+$warehouse = trim($_GET['warehouse'] ?? '');
 
 if (empty($barcode) || empty($warehouse)) {
     http_response_code(400); // Bad Request
     $response['message'] = 'El código de barras y el almacén son obligatorios.';
+    echo json_encode($response);
+    exit;
+}
+
+// Validar formato del warehouse (debe ser 2 dígitos)
+if (!preg_match('/^[0-9]{2}$/', $warehouse)) {
+    http_response_code(400); // Bad Request
+    $response['message'] = 'Formato de almacén inválido. Debe ser 2 dígitos.';
     echo json_encode($response);
     exit;
 }

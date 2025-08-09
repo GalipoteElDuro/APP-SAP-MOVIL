@@ -6,26 +6,32 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function handleBarcodeBlur(event) {
-    const barcode = event.target.value;
-    const warehouse = document.getElementById('sucursalSelect').value;
+    const barcode = event.target.value.trim();
+    const warehouseSelect = document.getElementById('sucursalSelect');
+    const warehouse = warehouseSelect.value.trim();
 
-    if (!barcode) return; // No hacer nada si el campo está vacío
+    if (!barcode) {
+        return; // No hacer nada si el campo está vacío
+    }
 
     if (!warehouse) {
         showErrorMessage('Por favor, seleccione una sucursal primero.');
+        event.target.value = '';
         return;
     }
 
-    // Mostrar un indicador de carga
+    // Mostrar indicador de carga
     const originalPlaceholder = event.target.placeholder;
     event.target.placeholder = 'Buscando...';
     event.target.disabled = true;
 
     try {
-        const response = await fetch(`Conexiones/lookup-item.php?barcode=${barcode}&warehouse=${warehouse}`);
+        console.log('Consultando artículo con:', { barcode, warehouse }); // Debug
+        
+        const response = await fetch(`Conexiones/lookup-item.php?barcode=${encodeURIComponent(barcode)}&warehouse=${encodeURIComponent(warehouse)}`);
         const data = await response.json();
-
-        console.log('Respuesta lookup-item:', data); // <-- Agrega esto para depurar
+        
+        console.log('Respuesta lookup-item:', data); // Debug
 
         if (data.success) {
             document.getElementById('numeroArticulo').value = data.itemCode;
@@ -33,17 +39,14 @@ async function handleBarcodeBlur(event) {
             document.getElementById('en-stock').value = data.stock;
             showSuccessMessage('Artículo encontrado y cargado.');
         } else {
-            showErrorMessage(data.message || 'Artículo no encontrado.');
-            // Limpiar campos si no se encuentra
-            document.getElementById('numeroArticulo').value = '';
-            document.getElementById('descripcion').value = '';
-            document.getElementById('en-stock').value = '';
+            showErrorMessage(data.message || 'Error al buscar el artículo');
+            event.target.value = '';
         }
     } catch (error) {
-        showErrorMessage('Error de red al buscar el artículo.');
-        console.error('Error de red:', error); // <-- Agrega esto para depurar
+        console.error('Error:', error);
+        showErrorMessage('Error de red al buscar el artículo');
+        event.target.value = '';
     } finally {
-        // Restaurar el campo de código de barras
         event.target.placeholder = originalPlaceholder;
         event.target.disabled = false;
     }
