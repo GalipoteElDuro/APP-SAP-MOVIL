@@ -25,6 +25,8 @@ async function handleBarcodeBlur(event) {
         const response = await fetch(`Conexiones/lookup-item.php?barcode=${barcode}&warehouse=${warehouse}`);
         const data = await response.json();
 
+        console.log('Respuesta lookup-item:', data); // <-- Agrega esto para depurar
+
         if (data.success) {
             document.getElementById('numeroArticulo').value = data.itemCode;
             document.getElementById('descripcion').value = data.description;
@@ -39,6 +41,7 @@ async function handleBarcodeBlur(event) {
         }
     } catch (error) {
         showErrorMessage('Error de red al buscar el artículo.');
+        console.error('Error de red:', error); // <-- Agrega esto para depurar
     } finally {
         // Restaurar el campo de código de barras
         event.target.placeholder = originalPlaceholder;
