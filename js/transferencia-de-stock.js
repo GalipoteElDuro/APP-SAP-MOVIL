@@ -148,9 +148,17 @@ function removeItem(id) {
   showSuccessMessage("Artículo eliminado de la lista");
 }
 
-// Función para limpiar formulario
+// Función para limpiar formulario, manteniendo las ubicaciones seleccionadas
 function clearForm() {
-  document.getElementById("transferForm").reset();
+  // Limpiar solo los campos relacionados con el artículo
+  document.getElementById("numeroArticulo").value = "";
+  document.getElementById("codigoBarras").value = "";
+  document.getElementById("descripcion").value = "";
+  document.getElementById("en-stock").value = "";
+  document.getElementById("cantidad").value = "";
+
+  // Mover el foco al campo de código de barras para el siguiente artículo
+  document.getElementById("codigoBarras").focus();
 }
 
 // Función para limpiar tabla
