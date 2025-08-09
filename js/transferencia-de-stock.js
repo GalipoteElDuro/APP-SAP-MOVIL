@@ -22,7 +22,7 @@ async function handleBarcodeBlur(event) {
     event.target.disabled = true;
 
     try {
-        const response = await fetch(`lookup-item.php?barcode=${barcode}&warehouse=${warehouse}`);
+        const response = await fetch(`Conexiones/lookup-item.php?barcode=${barcode}&warehouse=${warehouse}`);
         const data = await response.json();
 
         if (data.success) {
