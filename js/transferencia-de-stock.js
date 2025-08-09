@@ -1,4 +1,15 @@
+let transfersList = [];
+let itemCounter = 1;
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Cargar la lista desde sessionStorage al iniciar
+    const savedTransfers = sessionStorage.getItem('pendingTransfers');
+    if (savedTransfers) {
+        transfersList = JSON.parse(savedTransfers);
+    }
+    // Actualizar la tabla para mostrar los datos recuperados
+    updateTable();
+
     const codigoBarrasInput = document.getElementById('codigoBarras');
     if(codigoBarrasInput) {
         codigoBarrasInput.addEventListener('blur', handleBarcodeBlur);
@@ -52,9 +63,6 @@ async function handleBarcodeBlur(event) {
     }
 }
 
-let transfersList = [];
-let itemCounter = 1;
-
 // Función para agregar transferencia
 document
   .getElementById("transferForm")
@@ -85,7 +93,7 @@ document
     showSuccessMessage("Artículo agregado correctamente");
   });
 
-// Función para actualizar la tabla
+// Función para actualizar la tabla y guardar en sessionStorage
 function updateTable() {
   const tbody = document.getElementById("transfersTableBody");
 
@@ -130,6 +138,9 @@ function updateTable() {
   }
 
   updateCounters();
+
+  // Guardar la lista actualizada en sessionStorage
+  sessionStorage.setItem('pendingTransfers', JSON.stringify(transfersList));
 }
 
 // Función para actualizar contadores
