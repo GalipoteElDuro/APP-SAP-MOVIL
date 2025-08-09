@@ -1,6 +1,106 @@
 <?php
 session_start();
 
+// =========== BACKEND API PARA PROCESAR TRANSFERENCIAS ===========
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+
+    if (!isset($_SESSION['sap_session_id'])) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Error: No ha iniciado sesión.']);
+        exit;
+    }
+
+    $json_data = file_get_contents('php://input');
+    $data = json_decode($json_data, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Error: Datos JSON inválidos.']);
+        exit;
+    }
+
+    $warehouseCode = $data['WarehouseCode'];
+    $lines = $data['Lines'];
+    $stockTransferLines = [];
+    $lineNum = 0;
+
+    foreach ($lines as $line) {
+        $stockTransferLines[] = [
+            'LineNum' => $lineNum,
+            'ItemCode' => $line['ItemCode'],
+            'ItemDescription' => $line['ItemDescription'],
+            'Quantity' => $line['Quantity'],
+            'FromWarehouseCode' => $warehouseCode,
+            'WarehouseCode' => $warehouseCode, // En transferencias, el ToWarehouse es el WarehouseCode en las líneas
+            'StockTransferLinesBinAllocations' => [
+                [
+                    'BinAbsEntry' => $line['FromBinAbsEntry'],
+                    'Quantity' => $line['Quantity'],
+                    'AllowNegativeQuantity' => 'tNO',
+                    'BinActionType' => 'batFromWarehouse',
+                    'BaseLineNumber' => $lineNum
+                ],
+                [
+                    'BinAbsEntry' => $line['ToBinAbsEntry'],
+                    'Quantity' => $line['Quantity'],
+                    'AllowNegativeQuantity' => 'tNO',
+                    'BinActionType' => 'batToWarehouse',
+                    'BaseLineNumber' => $lineNum
+                ]
+            ]
+        ];
+        $lineNum++;
+    }
+
+    $sap_data = [
+        'FromWarehouse' => $warehouseCode,
+        'ToWarehouse' => $warehouseCode,
+        'Comments' => 'Transferencia creada desde APP-SAP-MOVIL',
+        'JournalMemo' => 'Inventory Transfers - SAP App',
+        'StockTransferLines' => $stockTransferLines
+    ];
+
+    $apiUrl = 'https://acv.b1.do:50000/b1s/v2/StockTransfers';
+    $sessionId = $_SESSION['sap_session_id'];
+    $ch = curl_init($apiUrl);
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Cookie: B1SESSION=' . $sessionId
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($sap_data));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
+    curl_close($ch);
+
+    if ($curl_error) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Error de cURL: ' . $curl_error]);
+        exit;
+    }
+
+    if ($http_code === 201) {
+        echo json_encode(['success' => true, 'message' => 'Transferencia creada con éxito en SAP.']);
+    } else {
+        http_response_code($http_code);
+        $error_response = json_decode($response, true);
+        $error_message = $error_response['error']['message']['value'] ?? 'Error desconocido al procesar en SAP.';
+        echo json_encode(['success' => false, 'message' => "Error SAP ($http_code): " . $error_message]);
+    }
+
+    exit;
+}
+
+// El resto del archivo HTML/PHP sigue aquí abajo sin cambios
+// ============================================================
+
 // Si el usuario no está logueado, redirigir al login
 if (!isset($_SESSION['sap_session_id'])) {
     header('Location: index.php');
@@ -99,7 +199,7 @@ $sessionId = htmlspecialchars($_SESSION['sap_session_id']);
                         </li>
                         <!-- Botón CERRAR SESIÓN (posicionado al final del menú) -->
                         <li class="nav-item mt-auto">
-                            <a class="btn btn-danger fw-bold fs-5" href="#">
+                            <a class="btn btn-danger fw-bold fs-5" href="Conexiones/logout.php">
                                 <i class="bi bi-box-arrow-right me-2 fs-5"></i>CERRAR SESIÓN
                             </a>
                         </li>
@@ -191,7 +291,7 @@ $sessionId = htmlspecialchars($_SESSION['sap_session_id']);
                                     <i class="bi bi-text-left me-1"></i>Descripción
                                 </label>
                                 <textarea class="form-control form-control-custom" id="descripcion" rows="2"
-                                    placeholder="Descripción del producto" required></textarea>
+                                    placeholder="Descripción del producto" required readonly></textarea>
                             </div>
 
                             <!-- Cantidad En Stock -->

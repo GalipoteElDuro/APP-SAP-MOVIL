@@ -1,3 +1,51 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const codigoBarrasInput = document.getElementById('codigoBarras');
+    if(codigoBarrasInput) {
+        codigoBarrasInput.addEventListener('blur', handleBarcodeBlur);
+    }
+});
+
+async function handleBarcodeBlur(event) {
+    const barcode = event.target.value;
+    const warehouse = document.getElementById('sucursalSelect').value;
+
+    if (!barcode) return; // No hacer nada si el campo está vacío
+
+    if (!warehouse) {
+        showErrorMessage('Por favor, seleccione una sucursal primero.');
+        return;
+    }
+
+    // Mostrar un indicador de carga
+    const originalPlaceholder = event.target.placeholder;
+    event.target.placeholder = 'Buscando...';
+    event.target.disabled = true;
+
+    try {
+        const response = await fetch(`lookup-item.php?barcode=${barcode}&warehouse=${warehouse}`);
+        const data = await response.json();
+
+        if (data.success) {
+            document.getElementById('numeroArticulo').value = data.itemCode;
+            document.getElementById('descripcion').value = data.description;
+            document.getElementById('en-stock').value = data.stock;
+            showSuccessMessage('Artículo encontrado y cargado.');
+        } else {
+            showErrorMessage(data.message || 'Artículo no encontrado.');
+            // Limpiar campos si no se encuentra
+            document.getElementById('numeroArticulo').value = '';
+            document.getElementById('descripcion').value = '';
+            document.getElementById('en-stock').value = '';
+        }
+    } catch (error) {
+        showErrorMessage('Error de red al buscar el artículo.');
+    } finally {
+        // Restaurar el campo de código de barras
+        event.target.placeholder = originalPlaceholder;
+        event.target.disabled = false;
+    }
+}
+
 let transfersList = [];
 let itemCounter = 1;
 
@@ -111,20 +159,80 @@ function clearTable() {
 }
 
 // Función para procesar transferencias
-function processTransfers() {
-  if (transfersList.length === 0) return;
-
-  if (confirm(`¿Procesar ${transfersList.length} transferencias?`)) {
-    // Aquí iría la lógica para enviar al servidor
-    console.log("Procesando transferencias:", transfersList);
-
-    // Simular procesamiento
-    showSuccessMessage(
-      `${transfersList.length} transferencias procesadas correctamente`
-    );
-    transfersList = [];
-    updateTable();
+async function processTransfers() {
+  if (transfersList.length === 0) {
+    showErrorMessage("No hay transferencias en la lista para procesar.");
+    return;
   }
+
+  const warehouseCode = document.getElementById("sucursalSelect").value;
+  if (!warehouseCode) {
+    showErrorMessage("Por favor, seleccione una sucursal activa primero.");
+    return;
+  }
+
+  // Mapear la lista de transferencias al formato requerido por el backend
+  const transferLines = transfersList.map(item => ({
+    ItemCode: item.numeroArticulo,
+    ItemDescription: item.descripcion, // Enviar también la descripción
+    Quantity: item.cantidad,
+    FromBinAbsEntry: item.deUbicacion, // ID de la ubicación origen
+    ToBinAbsEntry: item.aUbicacion,     // ID de la ubicación destino
+  }));
+
+  const payload = {
+    WarehouseCode: warehouseCode,
+    Lines: transferLines,
+  };
+
+  // Deshabilitar botones para evitar doble envío
+  const processButton = document.getElementById("btnProcess");
+  processButton.disabled = true;
+  processButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
+
+  try {
+    const response = await fetch("transferencia-de-stock.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      showSuccessMessage(result.message || "Transferencia procesada con éxito.");
+      transfersList = [];
+      updateTable();
+    } else {
+      showErrorMessage(result.message || "Ocurrió un error desconocido.");
+    }
+  } catch (error) {
+    showErrorMessage("Error de red o al conectar con el servidor.");
+  } finally {
+    // Reactivar botón de procesar
+    processButton.disabled = false;
+    processButton.innerHTML = '<i class="bi bi-check-circle me-2"></i>Procesar Todo';
+  }
+}
+
+// Función para mostrar mensajes de error (similar a la de éxito)
+function showErrorMessage(message) {
+    const alertDiv = document.createElement("div");
+    alertDiv.className = "alert alert-danger alert-dismissible fade show position-fixed";
+    alertDiv.style.cssText = "top: 90px; right: 20px; z-index: 9999; min-width: 300px;";
+    alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+    document.body.appendChild(alertDiv);
+
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000); // Dejar el mensaje de error un poco más de tiempo
 }
 
 // Función para mostrar mensajes
