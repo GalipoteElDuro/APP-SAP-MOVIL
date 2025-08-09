@@ -336,6 +336,12 @@ body {
   padding-bottom: 1rem;
 }
 
+/* ===== SCROLL PARA LA TABLA DE TRANSFERENCIAS ===== */
+.table-card .table-responsive {
+    max-height: 450px; /* Altura máxima antes de mostrar scroll */
+    overflow-y: auto;  /* Muestra el scroll vertical solo si es necesario */
+}
+
 .offcanvas-body .navbar-nav .nav-item.mt-auto {
   margin-top: auto;
 }

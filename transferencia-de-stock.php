@@ -271,7 +271,7 @@ $sessionId = htmlspecialchars($_SESSION['sap_session_id']);
                                     <i class="bi bi-hash me-1"></i>Número de Artículo
                                 </label>
                                 <input type="text" class="form-control form-control-custom" id="numeroArticulo"
-                                    placeholder="Ej: ART001" required>
+                                    placeholder="Ej: ART001" required readonly>
                             </div>
 
                             <!-- Código de Barras -->
